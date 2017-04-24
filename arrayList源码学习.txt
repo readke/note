@@ -1,0 +1,111 @@
+一. arrayList初始化（new ArrayList（）方法）
+1、容器默认容量为10 （private static final int DEFAULT_CAPACITY = 10;）
+2、private static final Object[] EMPTY_ELEMENTDATA = {}
+3、private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
+4、transient Object[] elementData =null ;
+5、private int size = 0; 
+6、容器最大容量为 2147483639 (private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;)
+7、elementData = {}, elementData.length=0 (this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA )
+8、初始化完成
+
+二.往容器里存储对象 (调用 list.add(E e)方法)
+1.确保容器的容量可以添加对象 (调用ensureCapacityInternal(size + 1) 方法)
+1.1 判断 elementData 是否== DEFAULTCAPACITY_EMPTY_ELEMENTDATA  
+	如果为true：
+		则比较初始容量DEFAULT_CAPACITY和size+1,取其中较大的数为容器的最小容量 
+	code:	if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
+				minCapacity = Math.max(DEFAULT_CAPACITY, minCapacity);
+			}
+1.2 调用ensureExplicitCapacity(minCapacity)方法	
+	code:	ensureExplicitCapacity(minCapacity);
+1.2.1 修改此列表的次数+1
+		code:	modCount++; (modCount 属性继承自AbstractList类)
+1.2.2 判断容器最小容量是否大于elementData数组的长度
+	如果为true：
+		调用grow(minCapacity)方法
+		code:	if (minCapacity - elementData.length > 0)
+					grow(minCapacity);
+1.2.2.1 获取旧的容器容量(为elementData的长度)
+		code:	int oldCapacity = elementData.length;
+1.2.2.2 设置新的容器容量(为旧的容器容量数值加上其数值二进制左移1位的数值)
+		code:	int newCapacity = oldCapacity + (oldCapacity >> 1);
+1.2.2.3 判断新容器容量是否小于最小容器的容量
+		如果为true
+			新容器容量的值等于最小容器的容量
+		code:	if (newCapacity - minCapacity < 0)
+					newCapacity = minCapacity;
+1.2.2.4 判断新容器容量是否大于最大容器的容量
+		1.如果为true
+			判断容器最小容量是否小于0
+			如果为true
+				抛出OutOfMemoryError错误
+				code:	if (minCapacity < 0) // overflow
+							throw new OutOfMemoryError();
+		2.判断最小容器容量是否大于最大容量
+			如果为true
+				设置最新容量为2147483647 (Integer.MAX_VALUE)
+			如果为fals
+				设置最新容量为2147483639 (MAX_ARRAY_SIZE)
+			code:	newCapacity=(minCapacity > MAX_ARRAY_SIZE) ? Integer.MAX_VALUE : MAX_ARRAY_SIZE;
+1.2.2.5	生成一个新的elementData对象，长度为最新的容器容量，将旧elementData对象的元素复制到新的elementData中
+		code：	elementData = Arrays.copyOf(elementData, newCapacity);
+2 给elementData对象添加一个object元素，并将size加1
+  code: elementData[size++] = e;
+3 返回true表示容器添加对象成功
+  code:	return true;
+  
+三.往指定位置添加元素 add(int index,E element)
+	实现思路：将数组str1复制一份得到str2，将str1 index+1索引处开始到结尾的length所有的元素依次复制到str2自index索引开始的位置
+	直到str1的剩余长度位置为止，将str2的index索引位置元素设置为 element。
+	1、检查索引位是否有效
+	2、检查容器容量是否足够，如果不足，扩容(为旧的容器容量数值加上其数值二进制左移1位的数值)，
+	3、容器修改次数+1
+	4、找到剩余元素的长度
+	5、找到开始复制的元素位置
+	6、找到目标的开始位置
+	7、调用arraycopy(Object src,  int  srcPos,Object dest, int destPos，int length)方法
+	（方法描述：从指定源数组中复制一个数组，复制从指定的位置开始，到目标数组的指定位置结束。
+		从 src 引用的源数组到 dest 引用的目标数组，数组组件的一个子序列被复制下来。被复制的组件的编号等于 length 参数。
+		源数组中位置在 srcPos 到 srcPos+length-1 之间的组件被分别复制到目标数组中的 destPos 到 destPos+length-1 位置。）
+	8、str2 index索引处元素设置为element
+	9、容器元素个数+1
+	code:	public void add(int index, E element) {
+				rangeCheckForAdd(index);
+
+				ensureCapacityInternal(size + 1);  // Increments modCount!!
+				System.arraycopy(elementData, index, elementData, index + 1,
+								 size - index);
+				elementData[index] = element;
+				size++;
+			}
+  
+四.删除容器中的元素 remove(int index);
+	实现思路：将数组str1复制一份得到str2，将str1 index+1索引处开始到结尾的length所有的元素依次复制到str2自index索引开始的位置
+	直到str1的剩余长度位置为止。删除str2末位元素。得到最终的结果。
+	1、检查索引位是否有效
+	2、容器修改次数+1
+	3、获取被删除的元素
+	4、找到剩余元素的长度
+	5、找到开始复制的元素位置
+	6、找到目标的开始位置
+	7、调用arraycopy(Object src,  int  srcPos,Object dest, int destPos，int length)方法
+	（方法描述：从指定源数组中复制一个数组，复制从指定的位置开始，到目标数组的指定位置结束。
+		从 src 引用的源数组到 dest 引用的目标数组，数组组件的一个子序列被复制下来。被复制的组件的编号等于 length 参数。
+		源数组中位置在 srcPos 到 srcPos+length-1 之间的组件被分别复制到目标数组中的 destPos 到 destPos+length-1 位置。）
+	8、str2末位元素置为null
+	9、容器元素个数-1
+	10、返回删除的元素
+	code :	public E remove(int index) {
+				rangeCheck(index);
+				modCount++;
+				E oldValue = elementData(index);
+				int length = size - index - 1;
+				int srcPos = index+1;
+				int desPos = index;
+				if (length > 0)
+					System.arraycopy(elementData, srcPos, elementData, desPos,length);
+				elementData[--size] = null; // clear to let GC do its work
+
+				return oldValue;
+			}
+				
