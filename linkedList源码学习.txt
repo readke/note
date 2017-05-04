@@ -1,0 +1,35 @@
+前置知识：
+	1、queue接口(队列)
+		特点：先进先出，从队列的头部删除元素，从队列的尾部添加元素
+		接口定义：
+		boolean add(E e);  在尾部添加元素  如果队列满了的话，抛出IllegalStateException异常
+		boolean offer(E e);	在尾部添加元素，如果队列满了的话，反回false
+		E remove(); 返回头部元素，并删除，如果队列为空，抛出NoSuchElementException异常
+		E poll();	返回头部元素，并删除，如果队列为空，返回null
+		E element(); 仅返回头部元素，如果队列为空，抛出NoSuchElementException异常
+		E peek();	仅返回头部元素，如果队列为空，返回null
+	2、deque接口(栈)
+		特点：先进后出，从队列的顶端添加元素，从队列的顶端删除元素
+		接口定义：
+		void push(E e);  入栈，从顶部添加元素，如果栈满了，抛出IllegalStateException异常
+		E pop();		出栈，返回顶部的元素，并从栈中删除，如果栈为空，抛出NoSuchElementException异常
+		E peek();		查看栈顶元素。如果栈为空，返回null
+		
+	3、deque接口(双端队列)
+		特点：两端都可以添加和删除元素
+		接口定义：
+		void addFirst(E e);	   在头部添加元素，如果队列满了的话，抛出IllegalStateException异常
+		void addLast(E e);		在尾部添加元素，如果队列满了的话，抛出IllegalStateException异常
+		E getFirst();	取出头部元素，如果队列为空的话，抛出NoSuchElementException异常
+		E getLast(E e);	取出尾部元素，如果队列为空的话，抛出NoSuchElementException异常
+		boolean offerFirst(E e);	在头部添加元素，如果队列满了的话，返回false	
+		boolean offerLast(E e);		在尾部添加元素，如果队列满了的话，返回false
+		E peekFirst();	返回头部元素，如果队列为空，返回null
+		E peekLast();	返回尾部元素，如果队列为空，返回null
+		E pollFirst();	返回头部元素，并删除，如果队列为空，返回null
+		E pollLast();	支架尾部元素，并删除，如果队列为空，返回null
+		E removeFirst(); 返回头部元素，并删除，如果队列为空，抛出NoSuchElementException异常
+		E removeLast();		返回尾部元素，并删除，如果队列为空，抛出NoSuchElementException异常
+1、linkedList 特点
+	插入和删除数据效率很高，访问数据的效率很低
+	
