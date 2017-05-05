@@ -31,5 +31,46 @@
 		E removeFirst(); 返回头部元素，并删除，如果队列为空，抛出NoSuchElementException异常
 		E removeLast();		返回尾部元素，并删除，如果队列为空，抛出NoSuchElementException异常
 1、linkedList 特点
-	插入和删除数据效率很高，访问数据的效率很低
+	说明：插入和删除数据效率很高，访问数据的效率很低
+	实现原理：  
+		内部使用双向链表来实现的，为了表示一链接关系，需要一个节点为的概念。节点
+		包括实际的元素、指向前一个节点为的链接、指向后一个节点的链接。节点是一个
+		内部类。
+		private static class Node<E>{
+			E item;
+			Node<E> prev;
+			Node<E> next;
+			
+			Node(Node<E> prev,E element,Node<E> next){
+				this.item = element;
+				this.prev = prev;
+				this.next = next;
+			}
+		}
+	
+	linkedList内部组成就是如下三个实例变量：
+		transient int size = 0;		size 表示链表的长度
+		transient Node<E> first;	first 指向链表的头节点；
+		transient Node<E> last;		last 指向链表的尾节点；
+		
+2、linkedList 操作头尾节点的核心方法
+	1) void linkFirst(E element)
+	2) void linkLast(E element)
+	3) Node<E> node(int)
+	4) void linkBefore(E element)
+	5) unlink(Node<E> node)
+	6) unlinkFirst(Node<E> node)
+	7) unlinkLast(Node<E> node)
+	
+	linkFirst(E element) 
+	说明：
+		向尾部添加一个节点
+	实现原理：
+		1) 获取链表当前尾节点对象；
+		2) 创建一个新节点,新节点的前一个节点为当前尾节点,新节点的后一个节点为null；
+		3) 尾节点指向新节点；
+		4) 判断前尾节点对象是否为空，如果为空(链表为空)，首节点指向新节点；如果不
+		   为空，前尾节点对象的下一个节点指向新的尾节点
+		5) 链表长度+1，改变次数+1
+	
 	
