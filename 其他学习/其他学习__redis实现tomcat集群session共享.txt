@@ -1,0 +1,18 @@
+tomcat + redis 实现tomcat集群session共享
+
+1、github 下载第三方库 tomcat-redis-session-manager (最高支持tomcat7版本)
+	项目地址：https://github.com/jcoleman/tomcat-redis-session-manager
+2、下载项目的依赖包jedis-2.5.2.jar  commons-pool2-2.2.jar  
+3、将该项目编译打成一个jar包
+4、将编译后的tomcat-redis-session-manager-2.0.0.jar jedis-2.5.2.jar  commons-pool2-2.2.jar 
+	放到在集群中的每个tomcat下的${tomcat_home}\lib包中
+5、在集群中的每个tomcat下${tomcat_home}\conf\context.xml 中增加如下配置
+	<Valve className="com.orangefunction.tomcat.redissessions.RedisSessionHandlerValve" />  
+        <Manager className="com.orangefunction.tomcat.redissessions.RedisSessionManager"  
+         host="192.168.1.178"    ----为redis服务地址 
+         port="6379"   			----为redis端口，默认6379
+         database="0"   		----数据库编号，默认为0
+		 password="123456"		----数据库密码（如果有配置，没有则去掉）
+         maxInactiveInterval="60" /> ----session失效时间,单位：秒，web.xml中的配置优先级最高
+
+6、部署测试
